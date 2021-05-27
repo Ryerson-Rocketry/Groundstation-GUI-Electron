@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>RRC Tracker</title>
+    <script src="/scripts/script.js"></script>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+<!-- Side navigation bar section -->
+<div class="sidenav" id="sidenav">
+    <img src="img/logo.png" alt="logo">
+
+    <a id="overview"     class="option"     onclick="gotoPage('overview')">     Overview</a>
+    <a id="pressure"     class="option"     onclick="gotoPage('pressure')">     Pressure</a>
+    <a id="altitude"     class="option"     onclick="gotoPage('altitude')">     Altitude</a>
+    <a id="temperature"  class="option"     onclick="gotoPage('temperature')">  Temperature</a>
+    <a id="acceleration" class="option"     onclick="gotoPage('acceleration')"> Acceleration</a>
+    <a id="velocity"     class="option"     onclick="gotoPage('velocity')">     Velocity</a>
+    <a id="location"     class="option"     onclick="gotoPage('location')">     Location</a>
+</div>
+<!-- Header section -->
+<div class="header">
+    <h2 id="section_name">Overview</h2>
+    <button onclick="toggleMode()">
+        <img src="img/bulb.png">
+    </button>
+</div>
+<!-- Contents section -->
+<div class="main" id="main"></div>
+</body>
+</html>

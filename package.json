@@ -1,0 +1,16 @@
+{
+  "name": "delightful-championship-beg-flewr",
+  "productName": "delightful-championship-beg-flewr",
+  "description": "My Electron application description",
+  "keywords": [],
+  "main": "./main.js",
+  "version": "1.0.0",
+  "author": "ahmad",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^12.0.7"
+  }
+}
