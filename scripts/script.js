@@ -40,8 +40,7 @@ function toggleMode()
 /**
  * Update header to new section name.
  * 
- * @param
-{string} name name of the new section to write
+ * @param {string} name name of the new section to write
  */
 function updateHeader(name)
 {
@@ -52,8 +51,7 @@ function updateHeader(name)
 /**
  * Updated selected sidenav options.
  * 
- * @param
-{string} id the id of the sidenav option to highlight as selcted
+ * @param {string} id the id of the sidenav option to highlight as selcted
  */
 function updateSidenav(id)
 {
@@ -72,10 +70,8 @@ function updateSidenav(id)
 /**
  * Load other pages from files and insert their content in element.
  * 
- * @param
-{HTMLElement} element     the element which's content will be updated
- * @param
-{string}      filename    url to the file to be loaded
+ * @param {HTMLElement} element     the element which's content will be updated
+ * @param {string}      filename    url to the file to be loaded
  */
 function innerHTMLfromFile(element, filename)
 {
@@ -92,8 +88,7 @@ function innerHTMLfromFile(element, filename)
 /**
  * Load page from file and update the GUI accordingly.
  * 
- * @param
-{string} name name of the new page to load
+ * @param {string} name name of the new page to load
  */
 function gotoPage(name)
 {
