@@ -7,15 +7,19 @@ from serial.serialutil import SerialException
 from optparse import OptionParser
 
 
-current_version = "v1.0.0"  # changelog in repo
+current_version = "v1.0.1"  # changelog in repo
 
 ## constants
 serial_speeds = {2400: 2, 4800: 4, 9600: 9, 19200: 19, 38400: 38, 57600: 57, 115200: 115}
 air_speeds = (4, 8, 16, 24, 32, 64, 96, 128, 192, 250)
 netids = range(500)
 txpowers = range(1, 31)
+DEFAULT_TX_PWR = 20 # in dB
 default_serial_port = "COM4"  # "/dev/ttyMFD2"
 DEFAULT_BAUDRATE = 57600
+
+numb_channels = range(1,50)
+DEFAULT_NUM_CHANNELS = 1
 
 ## command line options
 parser = OptionParser(usage="%prog serialport_options", version="%prog " + current_version)
@@ -35,6 +39,8 @@ parser.add_option("--mavlink-on", action="store_true", dest="mavlink", help="Ena
 parser.add_option("--mavlink-off", action="store_false", dest="mavlink", help="Disable MAVLink framing and reporting (MAVLINK). (factory default)")
 parser.add_option("--or-on", action="store_true", dest="op_resend", help="Enable opportunic resend (OP_RESEND)")
 parser.add_option("--or-off", action="store_false", dest="op_resend", help="Disable opportunic resend (OP_RESEND). (factory default)")
+parser.add_option("--TXpwr", action="store", type="int", dest="TXpwr", help="Choose our  transmission power to the radio in dB. Valid range: 0-31 dB.")#,default=DEFAULT_TX_PWR)
+parser.add_option("--number_channels", action="store", type="int", dest="NUM_CHANNELS", help="Choose our number of radio channels. Valid range:1-50.")
 
 (options, args) = parser.parse_args()
 
@@ -272,7 +278,21 @@ if __name__ == "__main__":
             exit(107)
 
     #  4. set TXPOWER
-
+    if options.TXpwr != None:
+        any_change = True
+        if options.TXpwr in txpowers:
+            vprint("Setting TX PWR to %d." % options.TXpwr)
+            command = "%sS4=%d\r\n" % (command_prefix, options.TXpwr)
+            vprint("Sending command: {}".format(command.strip()))
+            ser.write(command.encode('utf-8'))
+            time.sleep(2)
+            response = get_response()
+            if  not check_OK(response):
+                vprint("Settings failed. Exiting.")
+                exit(106)
+        else:
+            vprint("Invalid input.")
+            exit(107)
     ##  5. set ECC
     if options.ecc != None:
         any_change = True
@@ -348,6 +368,22 @@ if __name__ == "__main__":
     #  8. set MIN_FREQ
     #  9. set MAX_FREQ
     # 10. set NUM_CHANNELS
+    if options.NUM_CHANNELS != None:
+        any_change = True
+        if options.NUM_CHANNELS in numb_channels:
+            vprint("Setting channel to %d." % options.NUM_CHANNELS)
+            command = "%sS10=%d\r\n" % (command_prefix, options.NUM_CHANNELS)
+            vprint("Sending command: {}".format(command.strip()))
+            ser.write(command.encode('utf-8'))
+            time.sleep(2)
+            response = get_response()
+            if  not check_OK(response):
+                vprint("Settings failed. Exiting.")
+                exit(116)
+        else:
+            vprint("Invalid input.")
+            exit(117)
+
     # 11. set DUTY_CYCLE
     # 12. set LBT_RSSI
     # 13. set MANCHESTER
