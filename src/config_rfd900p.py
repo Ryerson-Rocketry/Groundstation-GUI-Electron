@@ -73,8 +73,8 @@ DEFAULT_BAUDRATE = DEFAULTS[0]
 
 flagStrings = ["-SS","-AS","-NETID","-PWR","-ECC","-MAV","-OP","-mf","-MF","-NC","-DC","-LBT","-MAN","-RTSCTS","-NODE_ID","-NODE_DEST","-SYN","-NODE_COUNT"]
 destStrings = ["serial_speed","airSpeed","netid","TXpwr","ecc","mavlink","op_resend","min_freq","max_freq","NUM_CHANNELS","DUTY_CYCLE","LBT_RSSI","MANCHESTER_ENCODING","RTSCTS","NODE_ID","NODE_DEST","SYN","NODE_COUNT"]
-helpStrings = [ " 1. set SERIAL_SPEED: Serial speed in ‘one byte form’", "2. set AIR_SPEED:  ","3. set NET_ID: Network ID.","4. set TXPOWER: Transmit power in dBm."
-,"5. set ECC: Enables or disables the golay error correcting code","   #  6. set MAVLINK:    Enables or disables the MAVLink framing and reporting","  #  7. set OPPRESEND:Opportunic Resend"," #  8. set MIN_FREQ:  Min freq in KHz"	,    "#  9. set MAX_FREQ:   Max freq in KHz", " # 10. set NUM_CHANNELS: Number of frequency hopping channels"," # 11. set DUTY_CYCLE:    The percentage of time to allow transmit"," # 12. set LBT_RSSI:  Listen before talk threshold"," # 13. set MANCHESTER: Manchester encoding"," # 14. set RTSCTS: Ready To Send and Clear To Send","# 15. set NODEID: Node ID. Base node ID is 0. One node must be acting as a base for a multipoint environment to work. NODECOUNT must be updated first before updating this parameter with bigger number."," # 16. set NODEDESTINATION: Remote node ID to communicate with. Set the value to 65535 to broadcast to all nodes. Cannot be the same as NODEID. NODECOUNT must be updated first before updating this parameter with bigger number."," 17. set SYNCANY: If set to 1, allows the modem to send data to all non-base nodes without finding the base. It is strongly recommended to set the value to 0 to avoid unwanted data communication confusion on a multipoint environment."," # 18. set NODECOUNT: The total number of nodes."]
+helpStrings = [ " set SERIAL_SPEED: Serial speed in ‘one byte form’", "set AIR_SPEED:  ","set NET_ID: Network ID."," set TXPOWER: Transmit power in dBm."
+,"set ECC: Enables or disables the golay error correcting code","  set MAVLINK:    Enables or disables the MAVLink framing and reporting","  set OPPRESEND:Opportunic Resend"," set MIN_FREQ:  Min freq in KHz"	,    " set MAX_FREQ:   Max freq in KHz", "  set NUM_CHANNELS: Number of frequency hopping channels"," set DUTY_CYCLE:    The percentage of time to allow transmit"," set LBT_RSSI:  Listen before talk threshold"," set MANCHESTER: Manchester encoding"," set RTSCTS: Ready To Send and Clear To Send","set NODEID: Node ID. Base node ID is 0. One node must be acting as a base for a multipoint environment to work. NODECOUNT must be updated first before updating this parameter with bigger number."," set NODEDESTINATION: Remote node ID to communicate with. Set the value to 65535 to broadcast to all nodes. Cannot be the same as NODEID. NODECOUNT must be updated first before updating this parameter with bigger number."," set SYNCANY: If set to 1, allows the modem to send data to all non-base nodes without finding the base. It is strongly recommended to set the value to 0 to avoid unwanted data communication confusion on a multipoint environment.","  set NODECOUNT: The total number of nodes."]
 # ****************************************************************
 '''
 print(len(RANGES))
@@ -95,7 +95,7 @@ parser = argparse.ArgumentParser(description='version:' + str(current_version))
 for i in range(len(DEFAULTS)):
     default_value = DEFAULTS[i]
     range_value = RANGES[i]
-    parser.add_argument(flagStrings[i],action="store",type=int,dest=destStrings[i],help=helpStrings[i] +"_______Valid choices are: from {} to {}.______ DEFAULT is: {} _______" .format(min(range_value),max(range_value),DEFAULTS[i]),metavar='',default=DEFAULTS[i],choices=RANGES[i])
+    parser.add_argument(flagStrings[i],action="store",type=int,dest=destStrings[i],help=helpStrings[i] +"\tValid choices are: from {} to {}.\nDEFAULT is: {} \n" .format(min(range_value),max(range_value),DEFAULTS[i]),metavar='',default=DEFAULTS[i],choices=RANGES[i])
 
 
 
@@ -110,11 +110,7 @@ parser.add_argument("-v", action="store", type=bool,dest="verbose",
 parser.add_argument("-tb", action="store",type=bool, dest="test_baud",
                     help="Test serial port for correct baud rate.", default=False) # set default to true if want to debug 
 
-parser.add_argument("-l", action="store", type=bool,dest="local_radio",
-                    help="Work with the local radio. Program default. Can't be used simultaneously with remote option.", default=True)
 
-parser.add_argument("-r", action="store", type=bool,
-                    dest="remote_radio", help="Work with the remote radio.",default=False)
 '''
 parser.add_argument("-param", action="store",type=bool,
                     dest="show_parameters", help="Shows all user settable EEPROM parameters.",default=False)
@@ -344,13 +340,13 @@ def parseOptions(options):
         dataOld[0] = "57600"
     elif(dataOld[0]=="115"):
         dataOld[0] = "115200"
-    vprint("********************\nresponse serial read values are:%s \n*********************"%response)
+    #vprint("********************\nresponse serial read values are:%s \n*********************"%response)
 
-    vprint("********************\ndataOld serial values are: {} \n**********************".format(dataOld))
+    #vprint("********************\ndataOld serial values are: {} \n**********************".format(dataOld))
     ser.close()
     ser.open() #reopening serial port for use below
-    vprint("length of default:%d"%(len(DEFAULTS)))
-    vprint("length of dataOld:%d"%(len(dataOld)))
+    #vprint("length of default:%d"%(len(DEFAULTS)))
+    #vprint("length of dataOld:%d"%(len(dataOld)))
     for i in (vars(options)):
      
         options_name = i
@@ -359,8 +355,8 @@ def parseOptions(options):
         #vprint("****************************")
         #vprint(options_name,options_value)
      
-        vprint("count, ii is at: %d"%(ii))
-        vprint("options name is {} and value is: {}".format(options_name,options_value))
+        #vprint("count, ii is at: %d"%(ii))
+        #vprint("options name is {} and value is: {}".format(options_name,options_value))
         if ((ii>=0) and (ii<= len(dataOld)-1)): 
             vprint(" ii is in range of dataOld")
             if(str(options_value) != str(dataOld[ii])):
