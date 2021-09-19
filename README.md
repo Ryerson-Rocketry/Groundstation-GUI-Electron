@@ -1,6 +1,6 @@
 # Groundstation-GUI-Electron
 A new groundstation GUI based on ELectron
-#radio config commands:
+# radio config commands:
   * **-h, --help**     show this help message and exit
   * **-SS**            set SERIAL_SPEED: Serial speed in ‘one byte form’ Valid choices are: from 2400 to 115200. DEFAULT is: 57600
   * **-AS**            set AIR_SPEED: Valid choices are: from 4 to 250. DEFAULT is: 128
