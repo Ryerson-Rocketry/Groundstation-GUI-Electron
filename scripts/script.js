@@ -1,3 +1,12 @@
+let pressure = [0];
+let altitude = [0];
+let temperature = [0];
+let velocity = [0];
+let acceleration = [0];
+let time = [0]
+
+
+
 ////    Functions to run at page load    ////
 
 window.onload = function()
@@ -101,18 +110,27 @@ function gotoPage(name)
 
     innerHTMLfromFile(document.getElementById("main"), './pages/' + name + '.html');
 
-    startSockets()
+    startSockets();
+
+    // if (name = "pressure") {
+    //     console.log('making pressure chart');
+    //     makePressureChart();
+    // }
 
     
 }
 
+
+
+
 function startSockets() {
     var socket = io.connect('http://127.0.0.1:5000');
 
-    socket.on('connect', function() {
-        socket.send('User has connected!');
-        document.getElementById("test").innerHTML = "New text!";
-    });
+    // socket.on('connect', function() {
+    //     socket.send('User has connected!');
+    //     document.getElementById("test").innerHTML = "New text!";
+        
+    // });
 
     socket.on('test', function(msg) {
         try {
@@ -122,8 +140,9 @@ function startSockets() {
     });
     
     socket.on('pressure', function(msg) {
+        pressure[pressure.length] = msg.data;
         try {
-            document.getElementById("pressure-tag").innerHTML = `pressure: ${msg.data}`;
+            document.getElementById("pressure-tag").innerHTML = `pressure ${msg.data}`;
         }
         catch (e) {}
         try{
@@ -134,6 +153,7 @@ function startSockets() {
     });
 
     socket.on('altitude', function(msg) {
+        altitude[altitude.length] = msg.data;
         try {
             document.getElementById("altitude-tag").innerHTML = `altitude: ${msg.data}`;
         } catch (e) {}
@@ -141,6 +161,7 @@ function startSockets() {
     });
 
     socket.on('acceleration', function(msg) {
+        acceleration[acceleration.length] = msg.data;
         try {
             document.getElementById("acceleration-tag").innerHTML = `acceleration: ${msg.data}`;
         } catch (e) {}
@@ -148,6 +169,7 @@ function startSockets() {
     });
 
     socket.on('temperature', function(msg) {
+        temperature[temperature.length] = msg.data;
         try {
             document.getElementById("temperature-tag").innerHTML = `temperature: ${msg.data}`;
         } catch (e) {}
@@ -155,6 +177,7 @@ function startSockets() {
     });
 
     socket.on('velocity', function(msg) {
+        velocity[velocity.length] = msg.data;
         try {
             document.getElementById("velocity-tag").innerHTML = `velocity: ${msg.data}`;
         } catch (e) {}
@@ -178,28 +201,30 @@ $(document).ready(function() {
     socket.on('connect', function() {
         socket.send('User has connected!');
         document.getElementById("test").innerHTML = "New text!";
+
+        setInterval(updateTime, 1000)
+        pressure = msg.pressure;
+        altitude = msg.altitude;
+        time = msg.time;
+        velocity = msg.velocity;
+        acceleration = msg.acceleration;
+        location = msg.location;
     });
+
+        
 });
 
-//     socket.on('test', function(msg) {
-//         document.getElementById("test").innerHTML = `text! ${msg.data}`;
-//         socket.send("Test data recieved.")
-//     });
+function updateTime() {
+    time[time.length] = time[time.length-1] + 1;
+    console.log(time);
+    document.getElementById("location").innerHTML = `test ${time[time.length-1]}`;
+}
+
+// function makePressureChart() {
     
-    
-
-// // socket.on('message', function(msg) {
-// // 	$("#messages").append('<li>'+msg+'</li>');
-// // 	console.log('Received message');
-// // });
-
-// // $('#sendbutton').on('click', function() {
-// // 	socket.send($('#myMessage').val());
-// // 	$('#myMessage').val('');
-// // });
-// });
 
 
+// }
 
 
 
