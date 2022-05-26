@@ -1,9 +1,9 @@
-let pressure = [0];
-let altitude = [0];
-let temperature = [0];
-let velocity = [0];
-let acceleration = [0];
-let time = [0]
+let pressure = [];
+let altitude = [];
+let temperature = [];
+let velocity = [];
+let acceleration = [];
+let time = [0];
 
 
 
@@ -110,12 +110,17 @@ function gotoPage(name)
 
     innerHTMLfromFile(document.getElementById("main"), './pages/' + name + '.html');
 
-    startSockets();
-
-    // if (name = "pressure") {
-    //     console.log('making pressure chart');
-    //     makePressureChart();
-    // }
+    if (name == "pressure") {
+        setTimeout(makePressureChart, 20);
+    } else if (name == "acceleration") {
+        setTimeout(makeAccelerationChart, 20);
+    } else if (name == "altitude") {
+        setTimeout(makeAltitudeChart, 20);
+    } else if (name == "temperature") {
+        setTimeout(makeTemperatureChart, 20);
+    } else if (name == "velocity") {
+        setTimeout(makeVelocityChart, 20);
+    }
 
     
 }
@@ -126,11 +131,6 @@ function gotoPage(name)
 function startSockets() {
     var socket = io.connect('http://127.0.0.1:5000');
 
-    // socket.on('connect', function() {
-    //     socket.send('User has connected!');
-    //     document.getElementById("test").innerHTML = "New text!";
-        
-    // });
 
     socket.on('test', function(msg) {
         try {
@@ -147,6 +147,10 @@ function startSockets() {
         catch (e) {}
         try{
             document.getElementById("pressurepage-tag").innerHTML = `pressure: ${msg.data}`;
+            
+
+            // addData(pressureChart,time[time.length-1],[msg.data]);
+            
         }
         catch (e) {}
         socket.send("Pressure data recieved.")
@@ -190,6 +194,17 @@ function startSockets() {
         } catch (e) {}
         socket.send("location data recieved.")
     });
+
+    // socket.on('initarrays', function (msg) {
+    //     console.log("initializing values");
+    //     pressure = msg.pressure;
+    //     altitude = msg.altitude;
+    //     time = msg.time;
+    //     velocity = msg.velocity;
+    //     acceleration = msg.acceleration;
+    //     location = msg.location;
+    // });
+
 }
 
 
@@ -203,28 +218,311 @@ $(document).ready(function() {
         document.getElementById("test").innerHTML = "New text!";
 
         setInterval(updateTime, 1000)
-        pressure = msg.pressure;
-        altitude = msg.altitude;
-        time = msg.time;
-        velocity = msg.velocity;
-        acceleration = msg.acceleration;
-        location = msg.location;
+        // pressure = msg.pressure;
+        // altitude = msg.altitude;
+        // time = msg.time;
+        // velocity = msg.velocity;
+        // acceleration = msg.acceleration;
+        // location = msg.location;
     });
+
+    startSockets();
+
+    // setInterval(updateChart, 2000)
 
         
 });
 
 function updateTime() {
-    time[time.length] = time[time.length-1] + 1;
-    console.log(time);
-    document.getElementById("location").innerHTML = `test ${time[time.length-1]}`;
+    time[time.length] = parseInt(time[time.length-1]) + 1;
+    // document.getElementById("location").innerHTML = `test ${time[time.length-1]}`;
 }
 
-// function makePressureChart() {
+
+let pressureChart;
+
+function makePressureChart() {
+
+    try {
+        pressureChart.destroy();
+    } catch (e) {};
     
+    let myChart = document.getElementById('pressureChartDiv').getContext('2d');
+
+    pressureChart = new Chart(myChart, {
+      type:'line',
+      data:{
+        labels:time,
+        datasets:[{
+          label:'Pressure',
+          data: pressure,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+        }]
+      },
+      options:{
+        responsive: true,
+        title:{
+          display:true,
+          text:'Pressure',
+          fontSize:25
+        },
+        animation: {
+            duration: 0
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#000'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+}
+
+let altitudeChart;
+
+function makeAltitudeChart() {
+
+    try {
+        altitudeChart.destroy();
+    } catch (e) {};
+    
+    let myChart = document.getElementById('altitudeChartDiv').getContext('2d');
+
+    pressureChart = new Chart(myChart, {
+      type:'line',
+      data:{
+        labels:time,
+        datasets:[{
+          label:'Altitude',
+          data: altitude,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+        }]
+      },
+      options:{
+        responsive: true,
+        title:{
+          display:true,
+          text:'Altitude',
+          fontSize:25
+        },
+        animation: {
+            duration: 0
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#000'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+}
+
+let accelerationChart;
+
+function makeAccelerationChart() {
+
+    try {
+        accelerationChart.destroy();
+    } catch (e) {};
+    
+    let myChart = document.getElementById('accelerationChartDiv').getContext('2d');
+
+    pressureChart = new Chart(myChart, {
+      type:'line',
+      data:{
+        labels:time,
+        datasets:[{
+          label:'Acceleration',
+          data: acceleration,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+        }]
+      },
+      options:{
+        responsive: true,
+        title:{
+          display:true,
+          text:'Acceleration',
+          fontSize:25
+        },
+        animation: {
+            duration: 0
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#000'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+}
+
+let temperatureChart;
+
+function makeTemperatureChart() {
+
+    try {
+        temperatureChart.destroy();
+    } catch (e) {};
+    
+    let myChart = document.getElementById('temperatureChartDiv').getContext('2d');
+
+    pressureChart = new Chart(myChart, {
+      type:'line',
+      data:{
+        labels:time,
+        datasets:[{
+          label:'Temperature',
+          data: temperature,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+        }]
+      },
+      options:{
+        responsive: true,
+        title:{
+          display:true,
+          text:'Temperature',
+          fontSize:25
+        },
+        animation: {
+            duration: 0
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#000'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+}
+
+let velocityChart;
+
+function makeVelocityChart() {
+
+    try {
+        velocityChart.destroy();
+    } catch (e) {};
+    
+    let myChart = document.getElementById('velocityChartDiv').getContext('2d');
+
+    pressureChart = new Chart(myChart, {
+      type:'line',
+      data:{
+        labels:time,
+        datasets:[{
+          label:'Velocity',
+          data: velocity,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+        }]
+      },
+      options:{
+        responsive: true,
+        title:{
+          display:true,
+          text:'Velocity',
+          fontSize:25
+        },
+        animation: {
+            duration: 0
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#000'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+}
 
 
-// }
+function addData(chart, label, data) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+    });
+    chart.update();
+}
 
 
+function updateChart() {
+    try {
+        pressureChart.destroy();
+        setTimeout(makePressureChart, 0);
+    } catch (e) {};
 
+}

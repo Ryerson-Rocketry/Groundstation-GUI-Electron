@@ -28,6 +28,7 @@ velocity = []
 acceleration = []
 temperature = []
 
+thread_started = False
 
 def background_thread():
 
@@ -37,8 +38,21 @@ def background_thread():
     global velocity
     global acceleration
     global temperature
+    global thread_started
 
     i = 0
+    # socketio.emit("initarrays",{'time':time,
+    #             'pressure': pressure,
+    #             'altitude':altitude,
+    #             'velocity':velocity,
+    #             'acceleration':acceleration,
+    #             'temperature':temperature} )
+
+    if thread_started == True:
+        return
+
+    thread_started = True
+
     while True:
 
         print(f'ok {i}')
@@ -73,20 +87,15 @@ def connect():
     global acceleration
     global temperature
 
+    
+
     with thread_lock:
         if thread is None:
             print("Starting thread")
             thread = socketio.start_background_task(background_thread)
 
     print("Started thread")
-    emit('test',{'data': 'Connected',
-                'count': 0,
-                'time':time,
-                'pressure': pressure,
-                'altitude':altitude,
-                'velocity':velocity,
-                'acceleration':acceleration,
-                'temperature':temperature})
+    emit('test',{'data': 'Connected'})
     
 
 
