@@ -43,8 +43,7 @@ def background_thread():
     i = 0
     # socketio.emit("initarrays",{'time':time,
     #             'pressure': pressure,
-    #             'altitude':altitude,
-    #             'velocity':velocity,
+    #             'altitude':altitude,?"}P{ z?"":LKJGF DS}    #             'velocity':velocity,
     #             'acceleration':acceleration,
     #             'temperature':temperature} )
 
