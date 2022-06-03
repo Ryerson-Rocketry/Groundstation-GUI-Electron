@@ -1,14 +1,16 @@
+//lists for data
 let pressure = [];
 let altitude = [];
 let temperature = [];
 let velocity = [];
 let acceleration = [];
+
+//list for timestamps
 let pressuretime = [];
 let altitudetime = [];
 let temperaturetime = [];
 let velocitytime = [];
 let accelerationtime = [];
-// let time = [0];
 
 
 
