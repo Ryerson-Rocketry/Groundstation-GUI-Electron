@@ -1,10 +1,6 @@
-from curses.ascii import alt
-from distutils.log import debug
-from socket import socket
 from flask import Flask 
 from flask_socketio import SocketIO, send, emit
 from threading import Lock
-import asyncio
 
 
 
@@ -21,6 +17,7 @@ def handleMessage(msg):
 	send(msg, broadcast=True)
 
 
+# declare the global array variables
 time = []
 pressure = []
 altitude = []
@@ -30,6 +27,10 @@ temperature = []
 
 thread_started = False
 
+'''
+Background thread starts a loop that runs every second and updates the frontend via sockets
+
+''' 
 def background_thread():
 
     global time
@@ -41,12 +42,8 @@ def background_thread():
     global thread_started
 
     i = 0
-    # socketio.emit("initarrays",{'time':time,
-    #             'pressure': pressure,
-    #             'altitude':altitude,?"}P{ z?"":LKJGF DS}    #             'velocity':velocity,
-    #             'acceleration':acceleration,
-    #             'temperature':temperature} )
 
+    # logic to prevent multiple threads from starting 
     if thread_started == True:
         return
 
@@ -54,6 +51,7 @@ def background_thread():
 
     while True:
 
+        # code to test, you can remove
         print(f'ok {i}')
         time.append(i)
         pressure.append(i)
@@ -62,13 +60,21 @@ def background_thread():
         acceleration.append(i)
         temperature.append(i)
 
+        """
+        implement logic to decide which data to send, append it to the array
+        use the respective namespace in the emit function to send that data to frontend
+        if you are using a timestamp, add the timestamp as well.
+
+        you can delete the time global variable after you implement timestamps
+        """
+
         socketio.emit("test", {'data':f"{time}"})
-        socketio.emit("pressure", {'data':f"{pressure[i]}"})
-        socketio.emit("altitude", {'data':f"{altitude[i]}"})
-        socketio.emit("velocity", {'data':f"{velocity[i]}"})
-        socketio.emit("acceleration", {'data':f"{acceleration[i]}"})
-        socketio.emit("temperature", {'data':f"{temperature[i]}"})
-        socketio.emit("location", {'data':f"{time[i]}"})
+        socketio.emit("pressure", {'data':f"{pressure[i]}", "time":f"{time[i]}"})
+        socketio.emit("altitude", {'data':f"{altitude[i]}", "time":f"{time[i]}"})
+        socketio.emit("velocity", {'data':f"{velocity[i]}", "time":f"{time[i]}"})
+        socketio.emit("acceleration", {'data':f"{acceleration[i]}", "time":f"{time[i]}"})
+        socketio.emit("temperature", {'data':f"{temperature[i]}", "time":f"{time[i]}"})
+        socketio.emit("location", {'data':f"{time[i]}", "time":f"{time[i]}"})
 
         socketio.sleep(1)
 
@@ -79,14 +85,6 @@ def background_thread():
 @socketio.event
 def connect():
     global thread
-    global time
-    global pressure
-    global altitude
-    global velocity
-    global acceleration
-    global temperature
-
-    
 
     with thread_lock:
         if thread is None:

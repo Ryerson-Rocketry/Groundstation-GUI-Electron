@@ -3,7 +3,12 @@ let altitude = [];
 let temperature = [];
 let velocity = [];
 let acceleration = [];
-let time = [0];
+let pressuretime = [];
+let altitudetime = [];
+let temperaturetime = [];
+let velocitytime = [];
+let accelerationtime = [];
+// let time = [0];
 
 
 
@@ -110,6 +115,7 @@ function gotoPage(name)
 
     innerHTMLfromFile(document.getElementById("main"), './pages/' + name + '.html');
 
+    // loads the appropriate chart, uses a timeout to wait for DOM to load
     if (name == "pressure") {
         setTimeout(makePressureChart, 20);
     } else if (name == "acceleration") {
@@ -131,23 +137,30 @@ function gotoPage(name)
 function startSockets() {
     var socket = io.connect('http://127.0.0.1:5000');
 
-
-    socket.on('test', function(msg) {
-        try {
-            document.getElementById("test").innerHTML = `text! ${msg.data}`;
-        } catch (e) {}
-        socket.send("Test data recieved.")
-    });
+    // tests that socket is running
+    // socket.on('test', function(msg) {
+    //     try {
+    //         document.getElementById("test").innerHTML = `text! ${msg.data}`;
+    //     } catch (e) {}
+    //     socket.send("Test data recieved.")
+    // });
     
+
+    /*
+    Starting sockets, tries updating the overview page and if that fails, it tries updating 
+    the respective page
+    */
+
     socket.on('pressure', function(msg) {
         pressure[pressure.length] = msg.data;
+        pressuretime[pressuretime.length] = msg.time;
         try {
-            document.getElementById("pressure-tag").innerHTML = `pressure ${msg.data}`;
+            document.getElementById("pressure-tag").innerHTML = `Pressure ${msg.data}`;
         }
         catch (e) {}
         try{
-            document.getElementById("pressurepage-tag").innerHTML = `pressure: ${msg.data}`;
-            updateChart(pressureChart, pressure)
+            document.getElementById("pressurepage-tag").innerHTML = `Pressure: ${msg.data}`;
+            updateChart(pressureChart, pressure, pressuretime)
         }
         catch (e) {}
         socket.send("Pressure data recieved.")
@@ -155,68 +168,63 @@ function startSockets() {
 
     socket.on('altitude', function(msg) {
         altitude[altitude.length] = msg.data;
+        altitudetime[altitudetime.length] = msg.time;
         try {
-            document.getElementById("altitude-tag").innerHTML = `altitude: ${msg.data}`;
+            document.getElementById("altitude-tag").innerHTML = `Altitude: ${msg.data}`;
         } catch (e) {}
         try {
-          document.getElementById("altitudepage-tag").innerHTML = `altitude: ${msg.data}`;
-          updateChart(altitudeChart, altitude)
+          document.getElementById("altitudepage-tag").innerHTML = `Altitude: ${msg.data}`;
+          updateChart(altitudeChart, altitude, altitudetime)
         } catch (e) {}
         socket.send("altitude data recieved.")
     });
 
     socket.on('acceleration', function(msg) {
         acceleration[acceleration.length] = msg.data;
+        accelerationtime[accelerationtime.length] = msg.time;
         try {
-            document.getElementById("acceleration-tag").innerHTML = `acceleration: ${msg.data}`;
+            document.getElementById("acceleration-tag").innerHTML = `Acceleration: ${msg.data}`;
         } catch (e) {}
         try {
-          document.getElementById("accelerationpage-tag").innerHTML = `acceleration: ${msg.data}`;
-          updateChart(accelerationChart, acceleration)
+          document.getElementById("accelerationpage-tag").innerHTML = `Acceleration: ${msg.data}`;
+          updateChart(accelerationChart, acceleration, accelerationtime)
         } catch (e) {}
         socket.send("acceleration data recieved.")
     });
 
     socket.on('temperature', function(msg) {
         temperature[temperature.length] = msg.data;
+        temperaturetime[temperaturetime.length] = msg.time;
         try {
-            document.getElementById("temperature-tag").innerHTML = `temperature: ${msg.data}`;
+            document.getElementById("temperature-tag").innerHTML = `Temperature: ${msg.data}`;
         } catch (e) {}
         try {
-          document.getElementById("temperaturepage-tag").innerHTML = `temperature: ${msg.data}`;
-          updateChart(temperatureChart, temperature)
+          document.getElementById("temperaturepage-tag").innerHTML = `Temperature: ${msg.data}`;
+          updateChart(temperatureChart, temperature, temperaturetime)
         } catch (e) {}
         socket.send("temperature data recieved.")
     });
 
     socket.on('velocity', function(msg) {
         velocity[velocity.length] = msg.data;
+        velocitytime[velocitytime.length] = msg.time;
         try {
-            document.getElementById("velocity-tag").innerHTML = `velocity: ${msg.data}`;
+            document.getElementById("velocity-tag").innerHTML = `Velocity: ${msg.data}`;
         } catch (e) {}
         try {
-          document.getElementById("velocitypage-tag").innerHTML = `velocity: ${msg.data}`;
-          updateChart(velocityChart, velocity)
+          document.getElementById("velocitypage-tag").innerHTML = `Velocity: ${msg.data}`;
+          updateChart(velocityChart, velocity, velocitytime)
         } catch (e) {}
         socket.send("velocity data recieved.")
     });
 
     socket.on('location', function(msg) {
         try {
-            document.getElementById("location-tag").innerHTML = `location: ${msg.data}`;
+            document.getElementById("location-tag").innerHTML = `Location: ${msg.data}`;
         } catch (e) {}
         socket.send("location data recieved.")
     });
 
-    // socket.on('initarrays', function (msg) {
-    //     console.log("initializing values");
-    //     pressure = msg.pressure;
-    //     altitude = msg.altitude;
-    //     time = msg.time;
-    //     velocity = msg.velocity;
-    //     acceleration = msg.acceleration;
-    //     location = msg.location;
-    // });
 
 }
 
@@ -231,27 +239,17 @@ $(document).ready(function() {
         document.getElementById("test").innerHTML = "New text!";
 
         setInterval(updateTime, 1000)
-        // pressure = msg.pressure;
-        // altitude = msg.altitude;
-        // time = msg.time;
-        // velocity = msg.velocity;
-        // acceleration = msg.acceleration;
-        // location = msg.location;
     });
 
     startSockets();
-
-    // setInterval(updateChart, 2000)
-
         
 });
 
-function updateTime() {
-    time[time.length] = parseInt(time[time.length-1]) + 1;
-    // document.getElementById("location").innerHTML = `test ${time[time.length-1]}`;
-}
+// function updateTime() {
+//     time[time.length] = parseInt(time[time.length-1]) + 1;
+// }
 
-
+// makes a global pressure chart
 let pressureChart;
 
 function makePressureChart() {
@@ -265,16 +263,17 @@ function makePressureChart() {
     pressureChart = new Chart(myChart, {
       type:'line',
       data:{
-        labels:time,
+        labels:pressuretime,
         datasets:[{
           label:'Pressure',
           data: pressure,
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+        tension: 0.1,
+        showLine: true,
+        spanGap: true
         }]
       },
       options:{
-        // responsive: true,
         title:{
           display:true,
           text:'Pressure',
@@ -306,6 +305,7 @@ function makePressureChart() {
 
 }
 
+// makes a global altitude chart
 let altitudeChart;
 
 function makeAltitudeChart() {
@@ -319,16 +319,17 @@ function makeAltitudeChart() {
     altitudeChart = new Chart(myChart, {
       type:'line',
       data:{
-        labels:time,
+        labels:altitudetime,
         datasets:[{
           label:'Altitude',
           data: altitude,
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+        tension: 0.1,
+        showLine: true,
+        spanGap: true
         }]
       },
       options:{
-        // responsive: true,
         title:{
           display:true,
           text:'Altitude',
@@ -360,6 +361,7 @@ function makeAltitudeChart() {
 
 }
 
+// makes a global acceleration chart
 let accelerationChart;
 
 function makeAccelerationChart() {
@@ -373,12 +375,14 @@ function makeAccelerationChart() {
     accelerationChart = new Chart(myChart, {
       type:'line',
       data:{
-        labels:time,
+        labels:accelerationtime,
         datasets:[{
           label:'Acceleration',
           data: acceleration,
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+        tension: 0.1,
+        showLine: true,
+        spanGap: true
         }]
       },
       options:{
@@ -414,6 +418,7 @@ function makeAccelerationChart() {
 
 }
 
+// makes a global temperature chart
 let temperatureChart;
 
 function makeTemperatureChart() {
@@ -427,12 +432,14 @@ function makeTemperatureChart() {
     temperatureChart = new Chart(myChart, {
       type:'line',
       data:{
-        labels:time,
+        labels:temperaturetime,
         datasets:[{
           label:'Temperature',
           data: temperature,
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+        tension: 0.1,
+        showLine: true,
+        spanGap: true
         }]
       },
       options:{
@@ -468,6 +475,7 @@ function makeTemperatureChart() {
 
 }
 
+// makes a global velocity chart
 let velocityChart;
 
 function makeVelocityChart() {
@@ -481,12 +489,14 @@ function makeVelocityChart() {
     velocityChart = new Chart(myChart, {
       type:'line',
       data:{
-        labels:time,
+        labels:velocitytime,
         datasets:[{
           label:'Velocity',
           data: velocity,
         borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
+        tension: 0.1,
+        showLine: true,
+        spanGap: true
         }]
       },
       options:{
@@ -522,26 +532,9 @@ function makeVelocityChart() {
 
 }
 
-
-function updateChart(chart, data) {
+// updates chart
+function updateChart(chart, data, label) {
   chart.data.datasets[0].data = data;
-  chart.data.labels = time;
+  chart.data.labels = label;
   chart.update();
 }
-
-// function addData(chart, label, data) {
-//     chart.data.labels.push(label);
-//     chart.data.datasets.forEach((dataset) => {
-//         dataset.data.push(data);
-//     });
-//     chart.update();
-// }
-
-
-// function updateChart() {
-//     try {
-//         pressureChart.destroy();
-//         setTimeout(makePressureChart, 0);
-//     } catch (e) {};
-
-// }
