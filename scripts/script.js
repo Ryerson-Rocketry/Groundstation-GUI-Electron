@@ -153,6 +153,20 @@ function startSockets() {
     the respective page
     */
 
+    /*
+
+    initalize currently breaking the site for some reason, will update when i figure it out
+    socket.on('initialize', function(msg) {
+        pressure = msg.pressure;
+        altitude = msg.altitude;
+        velocity = msg.velocity;
+        acceleration = msg.acceleration;
+        temperature = msg.temperature;
+        location = msg.location
+        socket.send("initialized.")
+    });
+    */
+
     socket.on('pressure', function(msg) {
         pressure[pressure.length] = msg.data;
         pressuretime[pressuretime.length] = msg.time;
@@ -238,10 +252,12 @@ $(document).ready(function() {
 
     socket.on('connect', function() {
         socket.send('User has connected!');
-        document.getElementById("test").innerHTML = "New text!";
+        // document.getElementById("test").innerHTML = "New text!";
 
-        setInterval(updateTime, 1000)
+        // setInterval(updateTime, 1000)
     });
+
+    socket.send("Init Request")
 
     startSockets();
         

@@ -2,7 +2,13 @@ from flask import Flask
 from flask_socketio import SocketIO, send, emit
 from threading import Lock
 
-
+# declare the global array variables
+time = []
+pressure = []
+altitude = []
+velocity = []
+acceleration = []
+temperature = []
 
 thread = None
 thread_lock = Lock()
@@ -13,17 +19,18 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 
 @socketio.on('message')
 def handleMessage(msg):
-	print('Message: ' + msg)
-	send(msg, broadcast=True)
+    print('Message: ' + msg)
+    if msg == "Init Request":
+        # print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\hello")
+        socketio.emit("initialize",{"pressure":f"{pressure}",
+        "altitude":f"{altitude}",
+        "acceleration":f"{acceleration}",
+        "altitude":f"{altitude}",
+        "temperature":f"{temperature}",
+        "velocity":f"{velocity}"
+        })
+	# send(msg, broadcast=True)
 
-
-# declare the global array variables
-time = []
-pressure = []
-altitude = []
-velocity = []
-acceleration = []
-temperature = []
 
 thread_started = False
 
@@ -66,6 +73,8 @@ def background_thread():
         if you are using a timestamp, add the timestamp as well.
 
         you can delete the time global variable after you implement timestamps
+
+        also need to add logic for location tracking
         """
 
         socketio.emit("test", {'data':f"{time}"})
