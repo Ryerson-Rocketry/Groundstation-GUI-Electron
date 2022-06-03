@@ -1,5 +1,19 @@
 # Groundstation-GUI-Electron
-A new groundstation GUI based on ELectron
+A new groundstation GUI based on ELectron, using a flask-socketio backend with websockets to continuously update the frontend with the data from the rocket.
+
+## Setup
+
+To install necesarry libraries run
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+Next run in two seperate terminal windows
+```bash
+python3 socket-server.py
+npm start
+```
+
 # radio config commands:
   * **-h, --help**     show this help message and exit
   * **-SS**            set SERIAL_SPEED: Serial speed in ‘one byte form’ Valid choices are: from 2400 to 115200. DEFAULT is: 57600
