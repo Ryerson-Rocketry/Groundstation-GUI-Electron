@@ -189,6 +189,27 @@ body {
     right: 0%;
 }
 
+.content-overview {
+    padding-top:1em;
+    width: 100%;
+    display:inline-flex;
+    flex-wrap: wrap;
+}
+
+.overview_content {
+    margin: 40px;
+    padding: 20px;
+    border-radius: 4px;
+    background-color: var(--light-bg);
+    box-shadow: 
+        0 7px 20px 0px rgba(0,0,0,0.2),
+        0 11px 20px 0px rgba(0,0,0,0.14),
+        15px 15px 20px 0px rgba(0,0,0,0.12);
+    width: 25%;
+    box-sizing: border-box;
+    
+}
+
 .section_content {
     margin: 40px;
     padding: 20px;
