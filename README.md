@@ -13,6 +13,22 @@ Next run in two seperate terminal windows
 python3 socket-server.py
 npm start
 ```
+  ### if using linux (pop.os) do the following ###
+to install necessesary libraries run 
+ pip3 install -r requirements.txt
+ 
+Next run in two separate terminal windows
+terminal 1
+ sudo python3 socket-server.py
+
+terminal 2 
+ sudo apt install nodejs npm
+ node -v
+ npm -v
+ npm install electron
+ npm start
+ 
+  ###########################
 
 # radio config commands:
   * **-h, --help**     show this help message and exit
